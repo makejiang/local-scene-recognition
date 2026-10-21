@@ -1,0 +1,56 @@
+{
+    "venv_name": "camera-companion",
+    "python_version": "3.11",
+    "download_wait_timeout_minutes": 9,
+    "models": [
+        {
+            "model_id": "yinquan529/MiniCPM-o-4_5-OV-CameraCompanion",
+            "dir_name": "MiniCPM-o-4_5-OV",
+            "required_files": [
+                "openvino_llm_language_model.xml",
+                "openvino_llm_language_model.bin",
+                "openvino_llm_embedding_model.xml",
+                "openvino_llm_embedding_model.bin",
+                "openvino_vision_model.xml",
+                "openvino_vision_model.bin",
+                "openvino_resampler_model.xml",
+                "openvino_resampler_model.bin",
+                "openvino_audio_encoder_model.xml",
+                "openvino_audio_encoder_model.bin",
+                "openvino_audio_projection_model.xml",
+                "openvino_audio_projection_model.bin",
+                "openvino_tts_language_model.xml",
+                "openvino_tts_language_model.bin",
+                "openvino_tts_embedding_model.xml",
+                "openvino_tts_embedding_model.bin",
+                "openvino_tts_code_embedding_model.xml",
+                "openvino_tts_code_embedding_model.bin",
+                "openvino_tts_code_head_model.xml",
+                "openvino_tts_code_head_model.bin",
+                "openvino_tts_projector_semantic_model.xml",
+                "openvino_tts_projector_semantic_model.bin",
+                "openvino_tts_projector_spk_model.xml",
+                "openvino_tts_projector_spk_model.bin",
+                "openvino_speaker_encoder_model.xml",
+                "openvino_speaker_encoder_model.bin",
+                "openvino_speech_tokenizer_model.xml",
+                "openvino_speech_tokenizer_model.bin",
+                "openvino_flow_embeddings_model.xml",
+                "openvino_flow_embeddings_model.bin",
+                "openvino_flow_encoder_chunk_model.xml",
+                "openvino_flow_encoder_chunk_model.bin",
+                "openvino_flow_estimator_chunk_model.xml",
+                "openvino_flow_estimator_chunk_model.bin",
+                "openvino_hift_model.xml",
+                "openvino_hift_model.bin"
+            ]
+        },
+        {
+            "model_id": "yinquan529/silero-vad-camera-companion",
+            "dir_name": "silero_vad",
+            "required_files": [
+                "silero_vad.onnx"
+            ]
+        }
+    ]
+}

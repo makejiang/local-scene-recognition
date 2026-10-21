@@ -1,0 +1,53 @@
+# Marvis skill venv requirements for local-scene-recognition.
+# Matches the real-runtime extras from the upstream pyproject.toml; pinned
+# to versions that are known to work with the OpenVINO IR shipped via
+# ModelScope (yinquan529/MiniCPM-o-4_5-OV-CameraCompanion).
+
+# --- Core runtime (matches upstream local-realtime-translator pinning) ---
+numpy<2.0
+openvino>=2024.0
+torch==2.4.1
+transformers>=4.51,<4.58
+optimum[openvino]>=1.20
+modelscope>=1.13
+
+# --- Camera + audio I/O (Windows) ---
+opencv-python>=4.8
+sounddevice>=0.4.6
+soundfile>=0.12
+
+# --- TTS fallback (when MiniCPM-o Token2Wav unavailable) ---
+pyttsx3>=2.90
+
+# --- VAD ---
+onnxruntime>=1.18
+
+# --- ASR mel-feature extraction ---
+# local_minicpm_runtime.ov_runtime.audio_runtime._mel_features uses
+# librosa.feature.melspectrogram for the Whisper-style log-mel front-end
+# the MiniCPM-o audio encoder requires. Without it every voice turn
+# fails fast with "librosa is required for audio mel-feature
+# extraction" and the skill returns the "I can't see the camera view"
+# safe response. scipy is a transitive dep of librosa but pinned
+# explicitly so resolution can't silently downgrade it.
+librosa>=0.10.0
+scipy>=1.10.0
+
+# --- Skill-side config / parsing ---
+pyyaml>=6.0
+pillow>=10.0
+
+# --- Web UI ---
+websockets>=12.0
+
+# --- Scheduled-task spawn path (scripts\server_task.py, via win32com) ---
+pywin32>=306
+
+# --- Camera-companion packages ---
+# local_camera_companion_skill (skill core logic) AND local_minicpm_runtime
+# (OpenVINO MiniCPM-o-4.5 runtime) are NOT listed here. build.ps1 builds them
+# into a single prebuilt wheel under dist\wheels\, and install-env.ps1 installs
+# every *.whl it finds there (its step 4). Shipping a prebuilt wheel instead of
+# a source path avoids a Windows MAX_PATH (260 char) failure when the build
+# tree would otherwise be created under the very deep CI checkout path. Their
+# own runtime deps (pyyaml, pillow) are already pinned above.

@@ -1,0 +1,238 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<title>本地启蒙学习助手 / Early Learning Assistant</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+  :root {
+    --bg: #0f1115;
+    --panel: #181c24;
+    --border: #2a2f3a;
+    --text: #e6e9ef;
+    --muted: #8a93a3;
+    --accent: #4f9eff;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--text);
+    font-family: "Segoe UI", -apple-system, BlinkMacSystemFont, "Microsoft YaHei", sans-serif;
+    display: grid;
+    grid-template-rows: auto 1fr auto;
+    height: 100vh;
+  }
+  header {
+    padding: 12px 20px;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  header h1 {
+    font-size: 16px;
+    font-weight: 600;
+    margin: 0;
+    flex: 1;
+  }
+  header .status {
+    font-size: 13px;
+    color: var(--muted);
+  }
+  header .status.running { color: var(--accent); }
+  header .status.error { color: #ff6b6b; }
+  main {
+    display: grid;
+    grid-template-columns: 1fr 360px;
+    overflow: hidden;
+  }
+  .preview {
+    background: #000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+  }
+  .preview img {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+  }
+  .panel {
+    border-left: 1px solid var(--border);
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    overflow-y: auto;
+  }
+  .panel h2 {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--muted);
+    margin: 0 0 8px;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+  .panel section {
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 12px 14px;
+  }
+  .panel .transcript {
+    font-size: 15px;
+    line-height: 1.45;
+    color: var(--text);
+  }
+  .panel .reply {
+    font-size: 15px;
+    line-height: 1.45;
+    color: var(--text);
+  }
+  .panel .placeholder {
+    color: var(--muted);
+    font-style: italic;
+  }
+  .panel .meta {
+    font-size: 12px;
+    color: var(--muted);
+    margin-top: 6px;
+    font-family: ui-monospace, SFMono-Regular, "Cascadia Mono", monospace;
+  }
+  .controls label {
+    display: block;
+    font-size: 12px;
+    color: var(--muted);
+    margin-bottom: 6px;
+  }
+  .controls select,
+  .controls textarea {
+    width: 100%;
+    background: var(--bg);
+    color: var(--text);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 8px 10px;
+    font-size: 14px;
+    font-family: inherit;
+  }
+  .controls textarea {
+    margin-top: 10px;
+    resize: vertical;
+    min-height: 64px;
+  }
+  .controls .buttons {
+    display: flex;
+    gap: 8px;
+    margin-top: 12px;
+  }
+  .controls button {
+    flex: 1;
+    padding: 8px 10px;
+    font-size: 14px;
+    font-weight: 600;
+    border-radius: 6px;
+    border: 1px solid var(--border);
+    background: var(--panel);
+    color: var(--text);
+    cursor: pointer;
+  }
+  .controls button:disabled {
+    opacity: 0.45;
+    cursor: default;
+  }
+  .controls button#start-btn:not(:disabled) {
+    background: var(--accent);
+    border-color: var(--accent);
+    color: #06121f;
+  }
+  .controls .presets-label {
+    margin-top: 12px;
+  }
+  .controls .presets {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+  .controls .chip {
+    flex: 0 0 auto;
+    padding: 5px 10px;
+    font-size: 13px;
+    font-weight: 500;
+    border-radius: 999px;
+    border: 1px solid var(--border);
+    background: var(--bg);
+    color: var(--text);
+    cursor: pointer;
+  }
+  .controls .chip:hover {
+    border-color: var(--accent);
+    color: var(--accent);
+  }
+  .hidden { display: none; }
+  footer {
+    padding: 10px 20px;
+    border-top: 1px solid var(--border);
+    color: var(--muted);
+    font-size: 12px;
+    display: flex;
+    justify-content: space-between;
+  }
+  .hint kbd {
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 2px 6px;
+    font-size: 11px;
+    color: var(--text);
+  }
+</style>
+</head>
+<body>
+  <header>
+    <h1>本地启蒙学习助手 / Early Learning Assistant</h1>
+    <div id="status-pill" class="status">连接中…</div>
+  </header>
+  <main>
+    <div class="preview">
+      <img id="preview-img" src="/frame.jpg" alt="camera preview">
+    </div>
+    <aside class="panel">
+      <section class="controls">
+        <h2>控制 / Controls</h2>
+        <label for="scenario">场景 / Scenario</label>
+        <select id="scenario"></select>
+        <label class="presets-label">学习预设 / Presets</label>
+        <div id="preset-row" class="presets"></div>
+        <textarea id="custom-prompt" class="hidden"
+          placeholder="输入自定义提示词 / type a custom prompt…"></textarea>
+        <div class="buttons">
+          <button id="start-btn" type="button">开始 / Start</button>
+          <button id="stop-btn" type="button">停止 / Stop</button>
+        </div>
+      </section>
+      <section>
+        <h2>识别 / Transcript</h2>
+        <div id="transcript" class="transcript placeholder">
+          按空格键或对着摄像头说话 / press Space or just speak…
+        </div>
+      </section>
+      <section>
+        <h2>回答 / Reply</h2>
+        <div id="reply" class="reply placeholder">—</div>
+        <div id="reply-meta" class="meta"></div>
+      </section>
+    </aside>
+  </main>
+  <footer>
+    <div class="hint">
+      选择场景后点“开始”，对着摄像头说话即可提问 / pick a scenario, press Start, then just speak.
+      关闭服务请运行 <code>scripts\run.ps1 --stop</code>
+    </div>
+    <div id="ws-status"></div>
+  </footer>
+  <script src="/static/status.js"></script>
+</body>
+</html>

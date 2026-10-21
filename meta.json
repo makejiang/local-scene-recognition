@@ -1,0 +1,24 @@
+{
+  "author": "Github",
+  "author_icon": "https://static.marvis.qq.com/wupload/skill-author-icons/1778639349473_GitHub.png",
+  "description": "placeholder",
+  "detail_describe": "本地启蒙学习助手，对着摄像头出示卡片即可语音学习\n识字卡识别英语单词，算术卡自动读题并计算\n美国硬币识别名称与面值并求和，手办/玩具/海报也能识别\n完全离线运行，画面与语音不离开本机",
+  "display_description": "基于本地AI大模型的启蒙学习助手：出示识字卡、算术卡或硬币即可语音讲解(仅限英特尔AIPC平台)",
+  "display_name": "本地启蒙学习助手",
+  "is_downloaded": false,
+  "name": "local-scene-recognition",
+  "scope": [
+    "main"
+  ],
+  "show_description": "基于本地AI大模型的启蒙学习助手：出示识字卡、算术卡或硬币即可语音讲解(仅限英特尔AIPC平台)",
+  "show_name": "本地启蒙学习助手",
+  "type": "英特尔用户专区",
+  "use_cases": [
+    "打开启蒙学习助手",
+    "这个用英语怎么说",
+    "帮我算一下这张卡片",
+    "这是多少钱",
+    "这个是什么"
+  ],
+  "version": "1.0.16"
+}
